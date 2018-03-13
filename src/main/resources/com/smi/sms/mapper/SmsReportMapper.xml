@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smi.dao.SmsReportMapper">
+	<insert id="batchSave">
+		insert into ${tbl}(receiveTime,reqNo,phoneno,status,description,wgCode,reportTime,smsCount,smsIndex) values 
+		<foreach collection="list"  separator="," item="data">
+			(
+				#{data.currentTime,jdbcType=TIMESTAMP},
+				#{data.msgid,jdbcType=CHAR}, 
+				#{data.phone,jdbcType=CHAR}, 
+				#{data.status,jdbcType=CHAR},
+				#{data.desc,jdbcType=VARCHAR},
+				#{data.wgcode,jdbcType=VARCHAR}, 
+				#{data.time,jdbcType=TIMESTAMP},
+				#{data.smsCount,jdbcType=INTEGER},
+				#{data.smsIndex,jdbcType=INTEGER}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="createTable">
+	CREATE TABLE ${tbl} (
+		id INT(11) NOT NULL AUTO_INCREMENT COMMENT '主键',
+		receiveTime DATETIME NULL COMMENT '星美短信服务器接收到状态报告的时间',
+		reqNo CHAR(32) NOT NULL COMMENT '请求序列号，与发送短信时的reqNo一一对应',
+		phoneno CHAR(16)  NULL COMMENT '手机号码',
+		status CHAR(1) NOT NULL COMMENT '短信最终的发送结果：0表示成功，1表示接口处理失败，2表示运营商网关失败',
+		description VARCHAR(100) NULL DEFAULT '' COMMENT '当status为1时，此字段保存错误码',
+		wgCode VARCHAR(100) NULL DEFAULT '' COMMENT '当status为2时，表示运营商网关返回的原始值',
+		reportTime DATETIME NOT NULL COMMENT '状态报告接收时间（由大汉三通侧返回此字段的值）',
+		smsCount TINYINT(4) NOT NULL COMMENT '长短信条数',
+		smsIndex TINYINT(4) NOT NULL COMMENT '长短信第几条标示',
+		PRIMARY KEY (id),
+		INDEX reqno (reqNo)
+	)COMMENT='短信状态报告表' 
+	COLLATE='utf8_general_ci' 
+	ENGINE=InnoDB
+	</update>
+</mapper>

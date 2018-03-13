@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smi.dao.SmsReq2PhoneMapper">
+	
+	<insert id="batchSave">
+		insert into  ${tbl}(reqno, phoneno,failed) values 
+		<foreach collection="list"  separator="," item="data">
+			(
+				#{data.reqNo,jdbcType=CHAR},
+				#{data.phone,jdbcType=CHAR},
+				#{data.failed,jdbcType=CHAR}
+			)
+		</foreach>
+	</insert>
+	
+	<update id="createTable">
+		CREATE TABLE ${tbl} (
+			reqno CHAR(32) NOT NULL COMMENT '发送序列号',
+			phoneno CHAR(16) NOT NULL COMMENT '单个手机号码',
+			failed CHAR(1)  NOT NULL DEFAULT '0' COMMENT '是否发送失败：0成功，1失败。此状态的成功只是说明提交短信成功，并不能确定短信最终是否发送成功',
+			INDEX reqno (reqno),
+			INDEX phoneno (phoneno)
+		)COMMENT='请求序列号与手机号的对应表'
+		COLLATE='utf8_general_ci'
+		ENGINE=InnoDB
+	</update>
+</mapper>

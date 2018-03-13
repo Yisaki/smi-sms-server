@@ -1,0 +1,152 @@
+server: 
+  context-path: /
+  display-name: Smi SMS Server
+  connection-timeout: 120000
+  compression: 
+    enabled: true
+    mime-types: application/json
+  
+spring:
+  name: smi-sms-service
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  datasource: 
+    driver-class-name: com.mysql.jdbc.Driver
+    connection-timeout: 60000
+    maximum-pool-size: 100
+    type: com.alibaba.druid.pool.DruidDataSource
+    initial-size: 10
+    min-idle: 0
+    max-active: 100
+    max-wait: 60000
+
+    
+mybatis:
+  check-config_location: true
+  config-location: classpath:mybatis-config.xml
+  mapper-locations: classpath:com/smi/**/mapper/*.xml
+  type-aliases-package: com.smi.model
+
+
+rabbitmq:
+  sms_mq: 
+    queueName: sms_queue
+    exchange: sms_exchange
+    routeKey: sms_route
+  delay_mq: 
+    queueName: delay_queue
+    exchange: sms_exchange
+    routeKey: delay_route
+  
+---
+server: 
+  port: 8089
+# development environment
+spring:
+  # PROFILES
+  profiles: dev
+  datasource: 
+    url: jdbc:mysql://192.168.68.21:3306/smi_sms1?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: fvt6eip
+  redis: 
+    host: 192.168.68.95
+    port: 6379
+    
+#mq配置
+rabbitmq: 
+  host: localhost
+  port:
+  qos: 3     
+    
+# LOGGING
+logging:
+  level.root: info
+  
+  
+
+---
+server: 
+  port: 8088
+# performance environment
+spring:
+  # PROFILES
+  profiles: performance
+  datasource: 
+    url: jdbc:mysql://192.168.68.21:3306/smi_sms?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: fvt6eip
+  redis: 
+    host: 192.168.68.95
+    port: 6379
+    
+#mq配置
+rabbitmq: 
+  host: 192.168.68.94
+  port:
+  qos: 100
+    
+# LOGGING
+logging:
+  level.root: info
+
+  
+  
+---
+server: 
+  port: 8088
+# test environment
+spring:
+  # PROFILES
+  profiles: test
+  datasource: 
+    url: jdbc:mysql://192.168.68.21:3306/smi_sms?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: fvt6eip
+  redis: 
+    host: 192.168.68.21
+    port: 6379
+    
+#mq配置
+rabbitmq: 
+  host: 192.168.68.21
+  port:
+  qos: 2
+    
+# LOGGING
+logging:
+  level.root: info
+  
+  
+  
+    
+---
+server: 
+  port: 8080
+# Production environment
+spring:
+  # PROFILES
+  profiles: production
+  datasource: 
+    url: jdbc:mysql://192.168.28.65:3306/smi_sms?useUnicode=true&characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull
+    username: user_sms
+    password: AB337uczehpg
+  redis: 
+    host: 192.168.28.79
+    port: 6379
+    
+#mq配置
+rabbitmq: 
+  host: 192.168.38.122
+  port:
+  qos: 60  
+
+# LOGGING
+logging:
+  level.root: info

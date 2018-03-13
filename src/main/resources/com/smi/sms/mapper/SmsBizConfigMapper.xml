@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.smi.dao.SmsBizConfigMapper">
+	<resultMap id="BaseResultMap" type="SmsBizConfig">
+		<result column="ip" property="ip" jdbcType="VARCHAR" />
+		<result column="channel" property="channel" jdbcType="VARCHAR" />
+		<result column="accountId" property="accountId" jdbcType="INTEGER" />
+		<result column="queue" property="queue" jdbcType="INTEGER" />
+		<result column="note" property="note" jdbcType="VARCHAR" />
+	</resultMap>
+	
+	<select id="listAll" resultMap="BaseResultMap">
+		select *	from sms_biz_config
+	</select>
+
+</mapper>
